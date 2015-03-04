@@ -10,15 +10,14 @@ conn_set.close()
 #-------------------
 
 with open('modlist.json', 'w+') as modlist:
-    modlist.write(json.dumps({"_structure":"{'subreddit':subreddit, 'numberOfMods':0, 'mods':[]}",
-                              "modlist":[]}, 
+    modlist.write(json.dumps({"_structure":"subreddit:{'numberOfMods':0, 'mods':[]}"}, 
                                 indent=4))
 
 #-------------------
 conn_elect = sqlite3.connect('elections.db')
 c_elect = conn_elect.cursor()
 c_elect.execute('''CREATE TABLE IF NOT EXISTS elections
-                    (subreddit text, url text, start text, end text)''')
+                    (subreddit text, url text, nominationStart text, electionStart text, electionEnd text)''')
 conn_elect.commit()
 conn_elect.close()
 
