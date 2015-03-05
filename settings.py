@@ -9,8 +9,8 @@ def get_settings(subreddit):
     settings = c.execute("SELECT * FROM settings WHERE subreddit=?", (subreddit,))
     return settings.fetchone()
 
-def change_settings(subreddit, first, frequency, duration, positions):
-    c.execute("UPDATE settings SET first=?, frequency=?, duration=?, positions=? WHERE subreddit=?", (first, frequency, duration, positions, subreddit))
+def change_settings(subreddit, next, frequency, duration, positions):
+    c.execute("UPDATE settings SET next=?, frequency=?, duration=?, positions=? WHERE subreddit=?", (next, frequency, duration, positions, subreddit))
     conn.commit()
 
 def delete_subreddit(subreddit):
@@ -21,6 +21,6 @@ def get_all_settings():
     settings = c.execute("SELECT * FROM settings ORDER BY subreddit")
     return [i for i in settings]
 
-def add_subreddit(subreddit, first, frequency, duration, positions):
-    c.execute("INSERT INTO settings VALUES (?, ?, ?, ?, ?)", (subreddit, first, frequency, duration, positions))
+def add_subreddit(subreddit, next, frequency, duration, positions):
+    c.execute("INSERT INTO settings VALUES (?, ?, ?, ?, ?)", (subreddit, next, frequency, duration, positions))
     conn.commit()

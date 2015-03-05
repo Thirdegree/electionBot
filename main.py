@@ -96,6 +96,10 @@ def count_votes(subreddit):
         return False
 
 def get_nominated(subreddit):
-    election = elections.get_election(subreddit)
+    sub = mods.get_subreddit(subreddit)
+    return sub['nominatedMods']
+
+def add_subreddit(subreddit, next=date.today(), frequency=timedelta(days=28), duration=7, positions=1):
+    settings.add_subreddit(subreddit, next, frequency, duration, positions)
 
 

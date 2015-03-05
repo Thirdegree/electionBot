@@ -7,7 +7,7 @@ import json
 conn_set = sqlite3.connect("settings.db")
 c_set = conn_set.cursor()
 c_set.execute('''CREATE TABLE IF NOT EXISTS settings 
-                (subreddit text, first text, frequency integer, duration integer, positions integer)''')
+                (subreddit text, next text, frequency integer, duration integer, positions integer)''')
 conn_set.commit()
 conn_set.close()
 
