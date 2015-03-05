@@ -92,7 +92,7 @@ def count_votes(subreddit):
                 voteCount[comment.body()] += 1
         return voteCount
     except KeyError as e:
-        print "ERROR: Attempted to count votes for %s, no such subreddit known."%e.message()
+        print "ERROR: Attempted to count votes for %s, no such subreddit known."%e.message
         return False
 
 def get_nominated(subreddit):
