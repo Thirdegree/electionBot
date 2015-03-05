@@ -20,7 +20,7 @@ electionInstructions = ("Moderators up for election today: %s\n\n"
                        "To vote, please write a comment with only the name of the moderator you with to vote for. Spelling matters, capitalization doesn't.\n\n"
                        "**IF YOU VOTE FOR MORE THAN ONE PERSON, NONE OF YOUR VOTES WILL BE COUNTED\n\n"
                        "Election start: %s\n\n"
-                       "Election end: %s")
+                       "Election end: %s\n\n")
 nominationInstructions = ("Please nominate moderators.\n\n"
                          "You may nominate as many moderators as you like. The top %d most nominated moderators will be voted on in the next election.\n\n" 
                          "To nominate, simply write down their name. Spelling matters, capitalization doesn't. Elections begin when nominations end.\n\n"
