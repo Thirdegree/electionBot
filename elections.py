@@ -16,7 +16,7 @@ class Election():
         self.electionEnd = electionEnd
 
     def __str__(self):
-        return self.subreddit
+        return self.subreddit + " Election"
 
     __repr__ = __str__ #apperently list comprehension uses __repr__ not __str__
 

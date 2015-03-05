@@ -102,4 +102,6 @@ def get_nominated(subreddit):
 def add_subreddit(subreddit, next=date.today(), frequency=timedelta(days=28), duration=7, positions=1):
     settings.add_subreddit(subreddit, next, frequency, duration, positions)
 
+def 
+
 
