@@ -1,6 +1,6 @@
 import json
 
-modlistFile = open('modlist.json', 'w+')
+modlistFile = open('modlist.json', 'r+')
 modlist = json.loads(modlistFile.read())
 
 def add_subreddit(subreddit):
