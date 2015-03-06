@@ -35,6 +35,15 @@ def get_upcomming_elections():
     elections = c.execute("SELECT * FROM elections ORDER BY electionStart")
     return [Election(*i) for i in elections]
 
+#returns any elections happening today.
+def get_todays_elections():
+    elections = c.execute("SELECT * FROM elections WHERE electionStart=? ORDER BY subreddit", (str(date.today()),))
+    return [Election(*i) for i in elections]
+
+def get_todays_nominations():
+    elections = c.execute("SELECT * FROM elections WHERE nominationStart=? ORDER BY subreddit", (str(date.today()),))
+    return [Election(*i) for i in elections]
+
 #returns all elections, ordered by end date. Could differ from upcomming due to custom settings
 def get_ending_soon_elections():
     elections = c.execute("SELECT * FROM elections ORDER BY electionEnd")
@@ -62,4 +71,8 @@ def create_election(subreddit, nominationUrl, electionUrl, nomainationStart, ele
 #sepearete function because the thread isn't created for a time after the election is added to the db (thanks, nomination)
 def add_election_url(subreddit, electionUrl):
     c.execute("UPDATE elections SET electionUrl=? WHERE subreddit=?", (electionUrl, subreddit))
+    conn.commit()
+
+def add_nomination_url(subreddit, nominationUrl):
+    c.execute("UPDATE elections SET nominationUrl=? WHERE subreddit=?", (nominationUrl, subreddit))
     conn.commit()

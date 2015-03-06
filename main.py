@@ -49,16 +49,13 @@ def authenticate():
     r.set_access_credentials(scope=set('*'), access_token=access_token)
     r.login(username, password)
 
-def nominations():
-    pass
-
 
 def post_vote_thread(subreddit):
     try:
         election = elections.get_election(subreddit)
         sub = mods.get_subreddit(subreddit)
         electionUrl = r.submit(subreddit, "%s election"%subreddit, 
-                text=electionInstructions%(reduce(lambda x,y: x+", "+y, sub['mods']), 
+                text=electionInstructions%(reduce(lambda x,y: x+", "+y, sub['nominatedMods']), 
                                             election.electionStart, 
                                             election.electionEnd))
         elections.add_election_url(subreddit, electionUrl.url)
@@ -66,8 +63,7 @@ def post_vote_thread(subreddit):
         print "ERROR: Attempted to post election thread to %s, no such subreddit known."%e.message
 
 def post_nomination_thread(subreddit, nominationStart=date.today(), 
-                            electionStart=(date.today() + timedelta(days=7)),
-                            electionEnd=(date.today() + timedelta(days=14))):
+                            electionStart=(date.today() + timedelta(days=7))):
     try:
         election = elections.get_election(subreddit)
         sub = mods.get_subreddit(subreddit)
@@ -75,7 +71,7 @@ def post_nomination_thread(subreddit, nominationStart=date.today(),
                 text=nominationInstructions%(sub['numberOfMods'], 
                                              nominationStart,
                                              electionStart))
-        elections.create_election(subreddit, nominationUrl.url, "", nominationStart, electionStart, electionEnd)
+        elections.add_nomination_url(subreddit, nominationUrl.url)
 
     except KeyError as e:
         print "ERROR: Attempted to post election thread to %s, no such subreddit known."%e.message
@@ -95,13 +91,12 @@ def count_votes(subreddit):
         print "ERROR: Attempted to count votes for %s, no such subreddit known."%e.message
         return False
 
-def get_nominated(subreddit):
-    sub = mods.get_subreddit(subreddit)
-    return sub['nominatedMods']
-
-def add_subreddit(subreddit, next=date.today(), frequency=timedelta(days=28), duration=7, positions=1):
+def add_subreddit(subreddit, next=date.today(), frequency=timedelta(days=28), duration=7, positions=1, *mods):
     settings.add_subreddit(subreddit, next, frequency, duration, positions)
+    mods.add_subreddit(subreddit, numberOfMods=positions, *mods)
 
-def 
-
+def post_todays_nominations():
+    noms = elections.get_todays_nominations()
+    for nom in noms:
+        post_nomination_thread(nom.subreddit, nom.nominationStart, nom.electionStart)
 

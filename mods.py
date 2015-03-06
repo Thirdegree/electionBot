@@ -3,8 +3,8 @@ import json
 modlistFile = open('modlist.json', 'r+')
 modlist = json.loads(modlistFile.read())
 
-def add_subreddit(subreddit):
-    modlist[subreddit] = {'numberOfMods':0, 'mods':[]}
+def add_subreddit(subreddit, numberOfMods=0, *mods):
+    modlist[subreddit] = {'numberOfMods':numberOfMods, 'mods':mods}
     modlistFile.seek(0)
     modlistFile.truncate()
     modlistFile.write(json.dumps(modlist))
