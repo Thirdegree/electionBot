@@ -84,19 +84,34 @@ def count_votes(subreddit):
         mod = mods.get_subreddit(subreddit)
         voteCount = {i:0 for i in mod['nominatedMods']}
         for comment in praw.helpers.flatten_tree(post.comments):
-            if comment.body() in voteCount:
-                voteCount[comment.body()] += 1
+            if comment.body in voteCount:
+                voteCount[comment.body] += 1
         return voteCount
-    except KeyError as e:
-        print "ERROR: Attempted to count votes for %s, no such subreddit known."%e.message
+    except AttributeError as e:
+        print "ERROR: Attempted to count votes for %s, no such subreddit known."%subreddit
         return False
 
-def add_subreddit(subreddit, next=date.today(), frequency=timedelta(days=28), duration=7, positions=1, *mods):
+def add_subreddit(subreddit, modList, nominated_mods = [], next=date.today(), frequency=28, duration=7, positions=1, ):
     settings.add_subreddit(subreddit, next, frequency, duration, positions)
-    mods.add_subreddit(subreddit, numberOfMods=positions, *mods)
+    mods.add_subreddit(subreddit, modList, nominated_mods, numberOfMods=positions)
 
 def post_todays_nominations():
     noms = elections.get_todays_nominations()
     for nom in noms:
         post_nomination_thread(nom.subreddit, nom.nominationStart, nom.electionStart)
+
+def get_nominated(subreddit):
+    election = elections.get_election(subreddit)
+    url = election.nominationUrl
+    thread = r.get_submission(url=url)
+    nominated = {}
+    how_many = settings.get_settings(subreddit).positions
+    for comment in praw.helpers.flatten_tree(thread.comments):
+        if comment.body in nominated:
+            nominated[comment.body] += 1
+        else:
+            nominated[comment.body] = 1
+    sortednoms = sorted(nominated.items(),key=lambda x:x[1])
+    top_10 = [i[0] for i in sortednoms[:how_many]]
+    mods.mod_nominated(subreddit, top_10)
 

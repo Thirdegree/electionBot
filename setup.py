@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import os.path
 
 #------------------ DataBase for holding potential alterations in settings. Defaults are 
 #------------------    text      date  days  days   position
@@ -28,15 +29,17 @@ conn_elect.close()
 
 #------------------- Secrets are ment to be kept secret. 
 #-------------------
-with open('logins.json', 'w+') as logins:
-    username = raw_input("Bot username: ")
-    password = raw_input("Bot password: ")
-    clientId = raw_input("Client ID: ")
-    clientSecret = raw_input("Client Secret: ")
-    logins.write(json.dumps({
-                            "username":username,
-                            "password":password,
-                            "clientId":clientId,
-                            "clientSecret":clientSecret
-                            }, 
-                            indent=4))
+if not os.path.isfile('logins.json'):
+    with open('logins.json', 'w+') as logins:
+        username = raw_input("Bot username: ")
+        password = raw_input("Bot password: ")
+        clientId = raw_input("Client ID: ")
+        clientSecret = raw_input("Client Secret: ")
+        logins.write(json.dumps({
+                                "username":username,
+                                "password":password,
+                                "clientId":clientId,
+                                "clientSecret":clientSecret,
+                                "accessToken":""
+                                }, 
+                                indent=4))
