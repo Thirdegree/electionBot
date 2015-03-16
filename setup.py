@@ -8,14 +8,15 @@ import os.path
 conn_set = sqlite3.connect("settings.db")
 c_set = conn_set.cursor()
 c_set.execute('''CREATE TABLE IF NOT EXISTS settings 
-                (subreddit text, next text, frequency integer, duration integer, positions integer)''')
+                (subreddit text, next_ele text, frequency integer, duration integer, positions integer)''')
 conn_set.commit()
 conn_set.close()
 
 #------------------- JSON file (easier to hand modify) Defaults are 
 #------------------- 'subreddit': {'numberOfMods':1, 'mods':[modName], 'nominatedMods':[]}
-with open('modlist.json', 'w+') as modlist:
-    modlist.write(json.dumps({"_structure":"subreddit:{'numberOfMods':0, 'mods':[], 'nominatedMods':[]}"}, 
+if not os.path.isFile("modlist.json"):
+    with open('modlist.json', 'w+') as modlist:
+        modlist.write(json.dumps({"_structure":"subreddit:{'numberOfMods':0, 'mods':[], 'nominatedMods':[]}"}, 
                                 indent=4))
 
 #------------------- DB again for holding all possible elections.

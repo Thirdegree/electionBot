@@ -16,6 +16,7 @@ def delete_subreddit(subreddit):
     modlistFile.seek(0)
     modlistFile.truncate()
     modlistFile.write(json.dumps(modlist, indent=4))
+    modlistFile.seek(0)
 
 def get_subreddit(subreddit):
     return modlist[subreddit]
@@ -25,3 +26,4 @@ def mod_nominated(subreddit, nominated):
     modlistFile.seek(0)
     modlistFile.truncate()
     modlistFile.write(json.dumps(modlist, indent=4))
+    modlistFile.seek(0)

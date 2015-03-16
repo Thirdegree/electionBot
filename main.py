@@ -107,11 +107,11 @@ def get_nominated(subreddit):
     nominated = {}
     how_many = settings.get_settings(subreddit).positions
     for comment in praw.helpers.flatten_tree(thread.comments):
-        if comment.body in nominated:
-            nominated[comment.body] += 1
+        if comment.body.strip() in nominated:
+            nominated[comment.body.strip()] += 1
         else:
-            nominated[comment.body] = 1
-    sortednoms = sorted(nominated.items(),key=lambda x:x[1])
+            nominated[comment.body.strip()] = 1
+    sortednoms = list(reversed(sorted(nominated.items(),key=lambda x:x[1])))
     top_10 = [i[0] for i in sortednoms[:how_many]]
     mods.mod_nominated(subreddit, top_10)
 

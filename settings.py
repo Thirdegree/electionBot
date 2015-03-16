@@ -4,9 +4,9 @@ conn = sqlite3.connect('settings.db')
 c = conn.cursor()
 
 class Settings():
-    def __init__(self, subreddit, next, frequency, duration, positions):
+    def __init__(self, subreddit, next_ele, frequency, duration, positions):
         self.subreddit = subreddit
-        self.next = next
+        self.next_ele = next_ele
         self.frequency = frequency
         self.duration = duration
         self.positions = positions
@@ -26,8 +26,8 @@ def get_settings(subreddit):
         return Settings(*sett)
     return None
 
-def change_settings(subreddit, next, frequency, duration, positions):
-    c.execute("UPDATE settings SET next=?, frequency=?, duration=?, positions=? WHERE subreddit=?", (next, frequency, duration, positions, subreddit))
+def change_settings(subreddit, next_ele, frequency, duration, positions):
+    c.execute("UPDATE settings SET next_ele=?, frequency=?, duration=?, positions=? WHERE subreddit=?", (next_ele, frequency, duration, positions, subreddit))
     conn.commit()
 
 def delete_subreddit(subreddit):
@@ -38,6 +38,6 @@ def get_all_settings():
     settings = c.execute("SELECT * FROM settings ORDER BY subreddit")
     return [Settings(*i) for i in settings]
 
-def add_subreddit(subreddit, next, frequency, duration, positions):
-    c.execute("INSERT INTO settings VALUES (?, ?, ?, ?, ?)", (subreddit, next, frequency, duration, positions))
+def add_subreddit(subreddit, next_ele, frequency, duration, positions):
+    c.execute("INSERT INTO settings VALUES (?, ?, ?, ?, ?)", (subreddit, next_ele, frequency, duration, positions))
     conn.commit()
