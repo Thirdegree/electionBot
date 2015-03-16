@@ -101,12 +101,14 @@ def add_subreddit(subreddit, modList, nominated_mods = [], next=date.today(), fr
 def post_todays_nominations():
     noms = elections.get_todays_nominations()
     for nom in noms:
-        post_nomination_thread(nom.subreddit, nom.nominationStart, nom.electionStart)
+        if nom.nominationUrl == "":
+            post_nomination_thread(nom.subreddit, nom.nominationStart, nom.electionStart)
 
 def post_todays_elections():
     elecs = elections.get_todays_elections()
     for elec in elecs:
-        post_vote_thread(elec.subreddit)
+        if elec.electionUrl == "":
+            post_vote_thread(elec.subreddit)
 
 def get_nominated(subreddit):
     election = elections.get_election(subreddit)
@@ -122,4 +124,11 @@ def get_nominated(subreddit):
     sortednoms = list(reversed(sorted(nominated.items(),key=lambda x:x[1])))
     top_10 = [i[0] for i in sortednoms[:how_many]]
     mods.mod_nominated(subreddit, top_10)
+
+def get_all_nominated():
+    elecs = elections.get_todays_elections()
+    for elec in elecs:
+        get_nominated(elec.subreddit)
+
+
 
