@@ -60,7 +60,7 @@ def post_vote_thread(subreddit):
                                             election.electionEnd))
         elections.add_election_url(subreddit, electionUrl.url)
     except KeyError as e:
-        print "ERROR: Attempted to post election thread to %s, no such subreddit known."%e.message
+        print "ERROR: Attempted to post election thread to %s, no such subreddit known."%e
 
 def post_nomination_thread(subreddit, nominationStart=date.today(), 
                             electionStart=(date.today() + timedelta(days=7))):
@@ -74,7 +74,7 @@ def post_nomination_thread(subreddit, nominationStart=date.today(),
         elections.add_nomination_url(subreddit, nominationUrl.url)
 
     except KeyError as e:
-        print "ERROR: Attempted to post election thread to %s, no such subreddit known."%e.message
+        print "ERROR: Attempted to post election thread to %s, no such subreddit known."%e
 
 def count_votes(subreddit):
     try:
@@ -102,6 +102,11 @@ def post_todays_nominations():
     noms = elections.get_todays_nominations()
     for nom in noms:
         post_nomination_thread(nom.subreddit, nom.nominationStart, nom.electionStart)
+
+def post_todays_elections():
+    elecs = elections.get_todays_elections()
+    for elec in elecs:
+        post_vote_thread(elec.subreddit)
 
 def get_nominated(subreddit):
     election = elections.get_election(subreddit)
