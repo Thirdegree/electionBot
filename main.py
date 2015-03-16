@@ -18,7 +18,7 @@ clientID = logins['clientId']
 clientSecret = logins['clientSecret']
 electionInstructions = ("Moderators up for election today: %s\n\n"
                        "To vote, please write a comment with only the name of the moderator you with to vote for. Spelling matters, capitalization doesn't.\n\n"
-                       "**IF YOU VOTE FOR MORE THAN ONE PERSON, NONE OF YOUR VOTES WILL BE COUNTED\n\n"
+                       "**IF YOU VOTE FOR MORE THAN ONE PERSON, ONLY ONE WILL BE COUNTED\n\n"
                        "Election start: %s\n\n"
                        "Election end: %s\n\n")
 nominationInstructions = ("Please nominate moderators.\n\n"
@@ -82,10 +82,13 @@ def count_votes(subreddit):
         url = election.electionUrl
         post = r.get_submission(url=url)
         mod = mods.get_subreddit(subreddit)
+        votes = {}
         voteCount = {i:0 for i in mod['nominatedMods']}
         for comment in praw.helpers.flatten_tree(post.comments):
-            if comment.body in voteCount:
-                voteCount[comment.body] += 1
+            votes[comment.author] = comment.body
+        for k, v in votes.items():
+            if v in voteCount:
+                voteCount[v] += 1
         return voteCount
     except AttributeError as e:
         print "ERROR: Attempted to count votes for %s, no such subreddit known."%subreddit
@@ -107,10 +110,10 @@ def get_nominated(subreddit):
     nominated = {}
     how_many = settings.get_settings(subreddit).positions
     for comment in praw.helpers.flatten_tree(thread.comments):
-        if comment.body.strip() in nominated:
-            nominated[comment.body.strip()] += 1
+        if comment.body.strip().lower() in nominated:
+            nominated[comment.body.strip().lower()] += 1
         else:
-            nominated[comment.body.strip()] = 1
+            nominated[comment.body.strip().lower()] = 1
     sortednoms = list(reversed(sorted(nominated.items(),key=lambda x:x[1])))
     top_10 = [i[0] for i in sortednoms[:how_many]]
     mods.mod_nominated(subreddit, top_10)
