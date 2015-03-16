@@ -21,12 +21,14 @@ electionInstructions = ("Moderators up for election today: %s\n\n"
                        "**IF YOU VOTE FOR MORE THAN ONE PERSON, ONLY ONE WILL BE COUNTED\n\n"
                        "Election start: %s\n\n"
                        "Election end: %s\n\n")
+
 nominationInstructions = ("Please nominate moderators.\n\n"
                          "You may nominate as many moderators as you like. The top %d most nominated moderators will be voted on in the next election.\n\n" 
                          "To nominate, simply write down their name. Spelling matters, capitalization doesn't. Elections begin when nominations end.\n\n"
                          "Nomination start: %s\n\n"
                          "Nomination end: %s\n\n")
 
+requestString = r"(?i)Requested Subreddit: (.+)"
 
 r = praw.Reddit("ElectionBot by /u/thirdegree")
 
@@ -51,6 +53,7 @@ def authenticate():
 
 
 def post_vote_thread(subreddit):
+    subreddit = subreddit.lower()
     try:
         election = elections.get_election(subreddit)
         sub = mods.get_subreddit(subreddit)
@@ -64,6 +67,7 @@ def post_vote_thread(subreddit):
 
 def post_nomination_thread(subreddit, nominationStart=date.today(), 
                             electionStart=(date.today() + timedelta(days=7))):
+    subreddit = subreddit.lower()
     try:
         election = elections.get_election(subreddit)
         sub = mods.get_subreddit(subreddit)
@@ -77,6 +81,7 @@ def post_nomination_thread(subreddit, nominationStart=date.today(),
         print "ERROR: Attempted to post election thread to %s, no such subreddit known."%e
 
 def count_votes(subreddit):
+    subreddit = subreddit.lower()
     try:
         election = elections.get_election(subreddit)
         url = election.electionUrl
@@ -95,6 +100,7 @@ def count_votes(subreddit):
         return False
 
 def add_subreddit(subreddit, modList, nominated_mods = [], next=date.today(), frequency=28, duration=7, positions=1, ):
+    subreddit = subreddit.lower()
     settings.add_subreddit(subreddit, next, frequency, duration, positions)
     mods.add_subreddit(subreddit, modList, nominated_mods, numberOfMods=positions)
 
@@ -111,6 +117,7 @@ def post_todays_elections():
             post_vote_thread(elec.subreddit)
 
 def get_nominated(subreddit):
+    subreddit = subreddit.lower()
     election = elections.get_election(subreddit)
     url = election.nominationUrl
     thread = r.get_submission(url=url)
@@ -121,6 +128,7 @@ def get_nominated(subreddit):
             nominated[comment.body.strip().lower()] += 1
         else:
             nominated[comment.body.strip().lower()] = 1
+    #reversed returns an iterable, which list comp doesn't take kindly to.
     sortednoms = list(reversed(sorted(nominated.items(),key=lambda x:x[1])))
     top_10 = [i[0] for i in sortednoms[:how_many]]
     mods.mod_nominated(subreddit, top_10)
@@ -129,6 +137,11 @@ def get_all_nominated():
     elecs = elections.get_todays_elections()
     for elec in elecs:
         get_nominated(elec.subreddit)
+
+def get_addition_requests():
+    inbox = r.get_unread()
+    for message in inbox:
+
 
 
 
