@@ -1,11 +1,9 @@
-import praw
-import settings
-import elections
-import mods
-import requests
-import requests.auth
+import praw 
+import settings, elections, mods
+import requests, requests.auth
 import json
 import time
+import re
 from datetime import datetime, date, timedelta
 
 with open('logins.json') as l:
@@ -141,6 +139,9 @@ def get_all_nominated():
 def get_addition_requests():
     inbox = r.get_unread()
     for message in inbox:
+        m = re.match(requestString, message.body)
+        if m:
+        
 
 
 
