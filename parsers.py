@@ -8,7 +8,7 @@ class WikiParser(Object):
         self.raw_conditions = ""
 
     def get_raw_conditions(subreddit):
-        page = self.r.get_wiki_page(subreddit, "Election")
+        page = self.r.get_wiki_page(subreddit, "election")
         self.raw_conditions = page.content_md
 
     def get_frequency():
@@ -36,7 +36,7 @@ class WikiParser(Object):
         return duration
 
     def get_positions():
-        pattern = r"(?i)Mod Positions Avalible: (\d+)"
+        pattern = r"(?i)Mod Positions Available: (\d+)"
         match = re.match(pattern, self.raw_conditions)
         positions = 0
         if match:
