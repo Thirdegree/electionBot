@@ -5,6 +5,7 @@ import json
 import time
 import re
 from datetime import datetime, date, timedelta
+from parsers import WikiParser
 
 with open('logins.json') as l:
     logins = json.loads(l.read())
@@ -29,6 +30,7 @@ nominationInstructions = ("Please nominate moderators.\n\n"
 requestString = r"(?i)Requested Subreddit: (.+)"
 
 r = praw.Reddit("ElectionBot by /u/thirdegree")
+parser = WikiParser(r)
 
 #Still need to make sure this works in the wild.
 def authenticate():
@@ -97,9 +99,9 @@ def count_votes(subreddit):
         print "ERROR: Attempted to count votes for %s, no such subreddit known."%subreddit
         return False
 
-def add_subreddit(subreddit, modList, nominated_mods = [], next=date.today(), frequency=28, duration=7, positions=1, ):
+def add_subreddit(subreddit, modList, nominated_mods = [], next_elec=date.today(), frequency=28, duration=7, positions=1, ):
     subreddit = subreddit.lower()
-    settings.add_subreddit(subreddit, next, frequency, duration, positions)
+    settings.add_subreddit(subreddit, next_elec, frequency, duration, positions)
     mods.add_subreddit(subreddit, modList, nominated_mods, numberOfMods=positions)
 
 def post_todays_nominations():
@@ -141,7 +143,14 @@ def get_addition_requests():
     for message in inbox:
         m = re.match(requestString, message.body)
         if m:
-        
+            sub = m.group(1) #first capture group is full match, second is subreddit
+            #I need the parsers to get past here
+            parser.get_raw_conditions(sub)
+            frequency = parser.get_frequency()
+            next_elec = parser.get_next_election()
+            duration = parser.get_duration()
+            positions = parser. get_positions()
+
 
 
 
