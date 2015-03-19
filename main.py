@@ -146,10 +146,14 @@ def get_addition_requests():
             sub = m.group(1) #first capture group is full match, second is subreddit
             #I need the parsers to get past here
             parser.get_raw_conditions(sub)
+            mods = [i.name for i in r.get_moderators(sub)]
             frequency = parser.get_frequency()
             next_elec = parser.get_next_election()
             duration = parser.get_duration()
             positions = parser. get_positions()
+            add_subreddit(sub, mods, frequency=frequency, duration=duration, positions=positions, next_elec=next_elec)
+
+
 
 
 
