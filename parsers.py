@@ -45,3 +45,6 @@ class WikiParser():
         if match:
             positions = int(match.group(1))
         return positions
+
+    def get_nominations(self):
+        pattern = r"(?i)First Nominations: ((?:.+(?:, ){0,1})+)""
