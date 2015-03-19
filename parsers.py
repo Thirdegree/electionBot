@@ -47,4 +47,6 @@ class WikiParser():
         return positions
 
     def get_nominations(self):
-        pattern = r"(?i)First Nominations: ((?:.+(?:, ){0,1})+)""
+        #so, ((?:.+(?:, ){0,1})+).
+        #Basically it captures anything that looks like "item, item2, item 3, item4". simple as that.
+        pattern = r"(?i)First Nominations: ((?:.+(?:, ){0,1})+)"
